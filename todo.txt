@@ -1,0 +1,9 @@
+Trier mots importés par taille (+ petit au + grand)
+	/!\ Ne pas toucher la dernière ligne du fichier /!\
+	
+Compter le nombre de caractères par mot sélectionné
+
+Compter le nombre de caractères restant à placer (nbTotal - nbCaractèresSelect > nbTotal/3)
+
+Appel au générateur de mots croisés
+
