@@ -19,12 +19,12 @@ public class CrossWord{
 		listMotsPick = ges.TriBulleDecroissant(listMotsPick);
 		
 		
-		//voir toute la liste des mots sélécteionner aléatoirement
+		//voir toute la liste des mots sÃ©lÃ©cteionner alÃ©atoirement
 		for (int i = 0; i < listMotsPick.size(); i++ ) {
 			System.out.println(listMotsPick.get(i));
 		}
 		
-		/* Ajout récent */
+		/* Ajout rÃ©cent */
 		//Grille
 		//char grille[][] = new matrice[taille][taille];
 		char grille[][] = new char[taille][taille];
@@ -37,7 +37,7 @@ public class CrossWord{
 			}
 		}
 		
-		// récupération des deux plus grands mots
+		// rÃ©cupÃ©ration des deux plus grands mots
 		String firstWord= listMotsPick.get(0);
 		String secondWord= listMotsPick.get(1);
 		
@@ -52,8 +52,8 @@ public class CrossWord{
 		// intersection de deux lettres identiques
 		int nbCar=0;
 		int nbCar2=0;
-		boolean continuer1 = true; // sinon plusieurs premières lettres communes misent à diverses endroits
-		boolean continuer2 = true; // pour continuer sur chaques lettres après ou avant la première lettre
+		boolean continuer1 = true; // sinon plusieurs premiÃ¨res lettres communes misent Ã  diverses endroits
+		boolean continuer2 = true; // pour continuer sur chaques lettres aprÃ¨s ou avant la premiÃ¨re lettre
 		boolean continuer3 = true;
 		while( nbCar<firstWord.length())
 		{
@@ -63,13 +63,13 @@ public class CrossWord{
 			while( nbCar2<secondWord.length()&& continuer1 == true)
 			{
 				//System.out.println("mot2");
-				// trouver le même caractère aux position nbCar et nbCar2 des mots
-				// nbCar ligne de la matrice de la première chaine
+				// trouver le mÃªme caractÃ¨re aux position nbCar et nbCar2 des mots
+				// nbCar ligne de la matrice de la premiÃ¨re chaine
 				// nbCar2 ligne de la matrice de la seconde chaine
 				// System.out.println(charCom[nbCar]+"=="+charCom2[nbCar2]+"&&"+charCom[nbCar]+"!='*'");
 				if(charCom[nbCar]==charCom2[nbCar2]&& charCom[nbCar]!='*')
 				{
-					// placer la première lettre
+					// placer la premiÃ¨re lettre
 					if( continuer1 == true){
 						//System.out.println("grille["+nbCar2+"]["+nbCar+"] : "+charCom[nbCar]);
 						grille[nbCar2][nbCar]=charCom[nbCar];
@@ -82,7 +82,7 @@ public class CrossWord{
 						grille[nbCar2][numLettreAvant]=char1[numLettreAvant];
 						numLettreAvant++;
 					}
-					// Si on a des lettres du premier mot après la lettre commune
+					// Si on a des lettres du premier mot aprÃ¨s la lettre commune
 					int numLettreApres=nbCar+1;
 					while(numLettreApres<taille)
 					{
@@ -97,7 +97,7 @@ public class CrossWord{
 						numLettreAvantM2++;
 					}
 					
-					// Si on a une lettre du second mot après la lettre commune
+					// Si on a une lettre du second mot aprÃ¨s la lettre commune
 					int numLettreApresM2=nbCar2+1;
 					while(numLettreApresM2<taille)
 					{
@@ -176,7 +176,7 @@ public class CrossWord{
 	{
 		char[] tab1 = firstWord.toCharArray();
 		char[] tab2 = secondWord.toCharArray();
-		// tableau de caractères communs
+		// tableau de caractÃ¨res communs
 		char[] tab3= new char[tab1.length];
 		
 		for(int carTab1=0; carTab1<tab1.length; carTab1++)
@@ -196,7 +196,7 @@ public class CrossWord{
 		{
 			if(tab3[nbCar]!='*')
 			{
-				System.out.println("Le caractère : "+tab3[nbCar]+" à la position : "+nbCar+" est commun aux deux mots");
+				System.out.println("Le caractÃ¨re : "+tab3[nbCar]+" Ã  la position : "+nbCar+" est commun aux deux mots");
 			}
 		}*/
 		
