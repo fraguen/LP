@@ -112,10 +112,8 @@ public class CrossWord{
 			nbCar++;
 		}
 		
-=======
 		char grilleModif[][] = new char[taille][taille];
 		grilleModif=addWord(firstWord,secondWord,grille,taille);
->>>>>>> d67c22c52f9bc74911e662020883b76ad3ca4df3
 		// Affichage de la grille
 		for (int hauteur=0;hauteur<taille;hauteur++)
 		{
