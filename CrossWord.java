@@ -40,8 +40,6 @@ public class CrossWord{
 		// récupération des deux plus grands mots
 		String firstWord= listMotsPick.get(0);
 		String secondWord= listMotsPick.get(1);
-		
-<<<<<<< HEAD
 		char[] charCom;
 		charCom = this.getCharCom(firstWord,secondWord);
 		System.out.println(" ");
