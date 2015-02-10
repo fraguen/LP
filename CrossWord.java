@@ -19,7 +19,7 @@ public class CrossWord{
 		listMotsPick = ges.TriBulleDecroissant(listMotsPick);
 		
 		
-		//voir toute la liste des mots séléctionnés aléatoirement
+		//voir toute la liste des mots sélécteionner aléatoirement
 		for (int i = 0; i < listMotsPick.size(); i++ ) {
 			System.out.println(listMotsPick.get(i));
 		}
@@ -40,75 +40,6 @@ public class CrossWord{
 		// récupération des deux plus grands mots
 		String firstWord= listMotsPick.get(0);
 		String secondWord= listMotsPick.get(1);
-		char[] charCom;
-		charCom = this.getCharCom(firstWord,secondWord);
-		System.out.println(" ");
-		char[] charCom2;
-		charCom2 = this.getCharCom(secondWord,firstWord);
-		
-		char[] char1 =  firstWord.toCharArray();
-		char[] char2 =  secondWord.toCharArray();
-		// intersection de deux lettres identiques
-		int nbCar=0;
-		int nbCar2=0;
-		boolean continuer1 = true; // sinon plusieurs premières lettres communes misent à diverses endroits
-		boolean continuer2 = true; // pour continuer sur chaques lettres après ou avant la première lettre
-		boolean continuer3 = true;
-		while( nbCar<firstWord.length())
-		{
-			//System.out.println("mot1 ");
-			nbCar2=0;
-			//while( nbCar2<secondWord.length()&& (continuer1 == true || continuer2 == true || continuer3 == true))
-			while( nbCar2<secondWord.length()&& continuer1 == true)
-			{
-				//System.out.println("mot2");
-				// trouver le mÃªme caractère aux position nbCar et nbCar2 des mots
-				// nbCar ligne de la matrice de la première chaine
-				// nbCar2 ligne de la matrice de la seconde chaine
-				// System.out.println(charCom[nbCar]+"=="+charCom2[nbCar2]+"&&"+charCom[nbCar]+"!='*'");
-				if(charCom[nbCar]==charCom2[nbCar2]&& charCom[nbCar]!='*')
-				{
-					// placer la première lettre
-					if( continuer1 == true){
-						//System.out.println("grille["+nbCar2+"]["+nbCar+"] : "+charCom[nbCar]);
-						grille[nbCar2][nbCar]=charCom[nbCar];
-						continuer1=false;
-					}	
-					// Si on a des lettres du premier mot avant la lettre commune
-					int numLettreAvant=0;
-					while(numLettreAvant<nbCar)
-					{
-						grille[nbCar2][numLettreAvant]=char1[numLettreAvant];
-						numLettreAvant++;
-					}
-					// Si on a des lettres du premier mot après la lettre commune
-					int numLettreApres=nbCar+1;
-					while(numLettreApres<taille)
-					{
-						grille[nbCar2][numLettreApres]=char1[numLettreApres];
-						numLettreApres++;
-					}
-					// Si on a une lettre du second mot avant la lettre commune
-					int numLettreAvantM2=0;
-					while(numLettreAvantM2<nbCar2)
-					{
-						grille[numLettreAvantM2][nbCar]=char2[numLettreAvantM2];
-						numLettreAvantM2++;
-					}
-					
-					// Si on a une lettre du second mot après la lettre commune
-					int numLettreApresM2=nbCar2+1;
-					while(numLettreApresM2<taille)
-					{
-						grille[numLettreApresM2][nbCar]=char2[numLettreApresM2];
-						numLettreApresM2++;
-					}
-				}
-				
-				nbCar2++;
-			}	
-			nbCar++;
-		}
 		
 		char grilleModif[][] = new char[taille][taille];
 		grilleModif=addWord(firstWord,secondWord,grille,taille);
