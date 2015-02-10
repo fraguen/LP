@@ -19,7 +19,7 @@ public class CrossWord{
 		listMotsPick = ges.TriBulleDecroissant(listMotsPick);
 		
 		
-		//voir toute la liste des mots s√©l√©cteionner al√©atoirement
+		//voir toute la liste des mots s√©l√©ctionn√©s al√©atoirement
 		for (int i = 0; i < listMotsPick.size(); i++ ) {
 			System.out.println(listMotsPick.get(i));
 		}
@@ -62,7 +62,7 @@ public class CrossWord{
 			while( nbCar2<secondWord.length()&& continuer1 == true)
 			{
 				//System.out.println("mot2");
-				// trouver le m√™me caract√®re aux position nbCar et nbCar2 des mots
+				// trouver le m√É¬™me caract√®re aux position nbCar et nbCar2 des mots
 				// nbCar ligne de la matrice de la premi√®re chaine
 				// nbCar2 ligne de la matrice de la seconde chaine
 				// System.out.println(charCom[nbCar]+"=="+charCom2[nbCar2]+"&&"+charCom[nbCar]+"!='*'");
@@ -205,9 +205,9 @@ public class CrossWord{
 	}
 	/*
 	//////////////////////////////////////////////////////////////////////////////////////
-	// fait : premiËre occurence                                                        //
+	// fait : premi√®re occurence                                                        //
 	// a faire seconde occurence ou plus ( un seul mot a placer)                        //
-	// A rajouter : si la lettre commune est dÈj‡ utilisÈe passer a la lettre comune +1 //
+	// A rajouter : si la lettre commune est d√©j√† utilis√©e passer a la lettre comune +1 //
 	//////////////////////////////////////////////////////////////////////////////////////
 	*/
 	public char[][] addWord(String firstWord,String secondWord,char grille[][], int taille)
@@ -224,21 +224,21 @@ public class CrossWord{
 		int nbCar=0;
 		int nbCar2=0;
 		
-		boolean continuer1 = true; // sinon plusieurs premiËres lettres communes misent ‡ diverses endroits
+		boolean continuer1 = true; // sinon plusieurs premi√®res lettres communes misent √† diverses endroits
 		
 		while( nbCar<firstWord.length())
 		{
 			nbCar2=0;
 			while( nbCar2<secondWord.length()&& continuer1 == true)
 			{
-				// trouver le mÍme caractËre aux position nbCar et nbCar2 des mots
-				// nbCar ligne de la matrice de la premiËre chaine
+				// trouver le m√™me caract√®re aux position nbCar et nbCar2 des mots
+				// nbCar ligne de la matrice de la premi√®re chaine
 				// nbCar2 ligne de la matrice de la seconde chaine
 				if(charCom[nbCar]==charCom2[nbCar2]&& charCom[nbCar]!='*')
 				{
 					if(isEmpty(grille, taille))
 					{
-						// placer la premiËre lettre
+						// placer la premi√®re lettre
 						if( continuer1 == true){
 							grille[nbCar2][nbCar]=charCom[nbCar];
 							continuer1=false;
@@ -246,7 +246,7 @@ public class CrossWord{
 					}
 					else
 					{
-						// rechercher o˘ le mot est placÈ
+						// rechercher o√π le mot est plac√©
 						int posVert=0;
 						int posHor=0;
 						int posWord=0;
@@ -261,7 +261,7 @@ public class CrossWord{
 						grille[nbCar2][numLettreAvant]=char1[numLettreAvant];
 						numLettreAvant++;
 					}
-					// Si on a des lettres du premier mot aprËs la lettre commune
+					// Si on a des lettres du premier mot apr√®s la lettre commune
 					int numLettreApres=nbCar+1;
 					while(numLettreApres<char1.length)
 					{
@@ -276,7 +276,7 @@ public class CrossWord{
 						numLettreAvantM2++;
 					}
 					
-					// Si on a une lettre du second mot aprËs la lettre commune
+					// Si on a une lettre du second mot apr√®s la lettre commune
 					int numLettreApresM2=nbCar2+1;
 					while(numLettreApresM2<char2.length)
 					{
@@ -325,11 +325,11 @@ public class CrossWord{
 		return empty;
 	}
 	
-	// la fonction nous renverra la position du dernier caractËre du mot ainsi que son orientation 
+	// la fonction nous renverra la position du dernier caract√®re du mot ainsi que son orientation 
 	/*public int[] searchWordGrille(char grille[][],char[] word, int posVert, int posHor, int posWord, int taille)
 	{
 		int[] tab = new int[3];
-		// on utilise la valeur 20 car les mots peuvent Ítre au maximum de 15 caractËre et donc impossible qu'ils soient jusqu'‡ 20			
+		// on utilise la valeur 20 car les mots peuvent √™tre au maximum de 15 caract√®re et donc impossible qu'ils soient jusqu'√† 20			
 		tab[0]=20;
 		tab[1]=20;
 		tab[2]=20;
