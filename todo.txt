@@ -7,3 +7,24 @@ Compter le nombre de caractères restant à placer (nbTotal - nbCaractèresSelec
 
 Appel au générateur de mots croisés
 
+	--> Placer le premier mot sur la grille (OK)
+	--> Prendre le mot suivant (OK)
+	--> Rechercher s'il y a une intersection possible entre tous les mots présents sur la grille
+	--> S'il y a une intersection possible boucler sur tous les mots présent sur la grille et regarder s'il y a de nouvelles interactions
+	--> Si le mot ne dépasse pas de la grille le placer et revernir à l'etape 3, autrement continuer à chercher une place (etape 4)
+	--> Continuer la boucle jusqu'à ce que tous les mots soient placés ou impossible à placer
+	
+
+
+
+tryToAdd :
+	Recherche le mot avec le quel celui que l'on veux placer possède une intersection
+	Recherche le sens dans lequel le mot doit être placé (Vertical ou Horizontal) (OK)
+	Rechercher si le mot que l'on veux placer ne coupe pas un autre mot et ne colle pas un autre mot
+		--> Clonage de la grille
+		--> Regarde si cases adjacentes sont != * sauf au croisement
+		--> Place le mot si tout va bien
+	Regarder si quand l'on place le mot il ne sort pas de la grille clone
+	Si tout va bien placer le mot et supprimer clone
+	Sinon rechercher une autre place et refaire la démarche de clone
+	Si plus de place terminer avec ce mot

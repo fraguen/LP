@@ -4,7 +4,12 @@ import java.util.Random;
 
 public class CrossWord{
 
+	ArrayList<String,> wordsOnGrid = new ArrayList<String>();
+	HashMap<String, String> wordsOnGridAndOrientation = new HashMap<String, String>();
+
 	public CrossWord(int taille){
+
+		private int taille = taille;
 
 		ArrayList<String> listMotByTaille = getMotsByTailleMax(taille);
 		/*for(int i = 0; i < listMotByTaille.size(); i++){
@@ -19,7 +24,7 @@ public class CrossWord{
 		listMotsPick = ges.TriBulleDecroissant(listMotsPick);
 		
 		
-		//voir toute la liste des mots sélécteionner aléatoirement
+		//voir toute la liste des mots séléctionner aléatoirement
 		for (int i = 0; i < listMotsPick.size(); i++ ) {
 			System.out.println(listMotsPick.get(i));
 		}
@@ -38,11 +43,28 @@ public class CrossWord{
 		}
 		
 		// récupération des deux plus grands mots
-		String firstWord= listMotsPick.get(0);
-		String secondWord= listMotsPick.get(1);
+		String firstWord = listMotsPick.get(0);
+		String secondWord = listMotsPick.get(1);
 		
 		char grilleModif[][] = new char[taille][taille];
-		grilleModif=addWord(firstWord,secondWord,grille,taille);
+
+		//Placer les 2 premiers mots
+
+		grilleModif = addWord(firstWord,secondWord,grille,taille);
+
+		for(int indexMotPick = 2; indexMotPick < listMotsPick.length; indexMotPick++){
+			for (int indexMotPlaces = 0; indexMotPlaces < wordsOnGrid.length; indexMotPlaces++){
+				char[] charCom;
+				charCom = this.getCharCom(wordsOnGrid.get(indexMotPlaces), listMotsPick.get(indexMotPick));
+				if(charCom != null){
+					String wordWantToPlace = wordsOnGrid.get(indexMotPlaces);
+					String wordTested = listMotsPick.get(indexMotPick);
+					grilleModif = tryToAdd(wordWantToPlace, wordTested, charCom, grille);
+				}
+			}
+
+		}
+
 		// Affichage de la grille
 		for (int hauteur=0;hauteur<taille;hauteur++)
 		{
@@ -134,6 +156,71 @@ public class CrossWord{
 		
 		return tab3;
 	}
+
+
+	public char[][] tryToAdd(String wordWantToPlace, String wordTested, char[] charCom, char[][] grille){
+
+		String orientationWordPlaced = wordsOnGridAndOrientation.get(wordTested);
+		String orientationWordWantToPlace = null;
+		if(orientationWordPlaced.equals("vertical")){
+			orientationWordWantToPlace = "horizontal";
+		}
+		else if(orientationWordPlaced.equals("horizontal")){
+			orientationWordWantToPlace = "vertical";
+		}
+
+		char[][] posXYWordPlaced = findXYWordPlaced(wordTested, grille, orientationWordPlaced);
+
+
+	}
+
+	public char[][] findXYWordPlaced(String wordPlaced, char[][] grille, String orientation){
+
+		int posX = 0;
+		int posY = 0;
+		int indexArray = 0;
+		boolean wordFind = false;
+		char[][] posXY;
+
+		char[] wordPlacedArray = wordPlaced.toCharArray();
+
+		while(posX < taille){
+
+			while(posY < taille){
+
+				if(grille[posX][posY] == wordPlacedArray[indexArray]){
+					indexArray++;
+					wordFind = true;
+					if(orientation.equals("vertical")){
+						posY++;
+					}
+					else{
+						posX++;
+					}
+				}
+				if(wordFind == true && indexArray == wordPlaced.length){
+					if(orientation.equals("vertical")){
+						posXY[0] = posX;
+						posXY[1] = posY - wordPlaced.length;
+					}
+					else{
+						posXY[0] = posX - wordPlaced.length;
+						posXY[1] = posY;
+					}
+				}
+				posY++;
+			}
+			posY = 0;
+			posX++;
+
+		}
+		return posXY;
+	}
+
+	public char[][] addWordToGrid(String word, int posX, int posY, String orientation, char[][] grille){
+
+		return grille;
+	}
 	/*
 	//////////////////////////////////////////////////////////////////////////////////////
 	// fait : première occurence                                                        //
@@ -141,7 +228,8 @@ public class CrossWord{
 	// A rajouter : si la lettre commune est déjà utilisée passer a la lettre comune +1 //
 	//////////////////////////////////////////////////////////////////////////////////////
 	*/
-	public char[][] addWord(String firstWord,String secondWord,char grille[][], int taille)
+
+	public char[][] addWord(String firstWord, String secondWord, char grille[][], int taille)
 	{	
 		char[] charCom;
 		charCom = this.getCharCom(firstWord,secondWord);
@@ -152,66 +240,67 @@ public class CrossWord{
 		char[] char1 =  firstWord.toCharArray();
 		char[] char2 =  secondWord.toCharArray();
 		// intersection de deux lettres identiques
-		int nbCar=0;
-		int nbCar2=0;
+		int nbCar = 0;
+		int nbCar2 = 0;
 		
 		boolean continuer1 = true; // sinon plusieurs premières lettres communes misent à diverses endroits
 		
-		while( nbCar<firstWord.length())
+		while(nbCar < firstWord.length())
 		{
-			nbCar2=0;
-			while( nbCar2<secondWord.length()&& continuer1 == true)
+			nbCar2 = 0;
+			while( nbCar2 < secondWord.length() && continuer1 == true)
 			{
-				// trouver le même caractère aux position nbCar et nbCar2 des mots
+				// trouver le même caractère aux positions nbCar et nbCar2 des mots
 				// nbCar ligne de la matrice de la première chaine
 				// nbCar2 ligne de la matrice de la seconde chaine
-				if(charCom[nbCar]==charCom2[nbCar2]&& charCom[nbCar]!='*')
+
+				if(charCom[nbCar] == charCom2[nbCar2] && charCom[nbCar]!='*')
 				{
 					if(isEmpty(grille, taille))
 					{
 						// placer la première lettre
 						if( continuer1 == true){
-							grille[nbCar2][nbCar]=charCom[nbCar];
-							continuer1=false;
+							grille[nbCar2][nbCar] = charCom[nbCar];
+							continuer1 = false;
 						}
 					}
 					else
 					{
 						// rechercher où le mot est placé
-						int posVert=0;
-						int posHor=0;
-						int posWord=0;
+						int posVert = 0;
+						int posHor = 0;
+						int posWord = 0;
 						int[] posLastChar;
-						//posLastChar=searchWordGrille(grille,char1,posVert,posHor,posWord,taille);
-						//System.out.println("x : "+posLastChar[0]+"y: "+posLastChar[1]+grille[posLastChar[0]][posLastChar[1]]);
+						posLastChar=searchWordGrille(grille, char1, posVert, posHor, posWord, taille);
+						System.out.println("x : " + posLastChar[0] + " y : " + posLastChar[1] + grille[posLastChar[0]][posLastChar[1]]);
 					}
 					// Si on a des lettres du premier mot avant la lettre commune
-					int numLettreAvant=0;
-					while(numLettreAvant<char1.length)
+					int numLettreAvant = 0;
+					while(numLettreAvant < char1.length)
 					{
-						grille[nbCar2][numLettreAvant]=char1[numLettreAvant];
+						grille[nbCar2][numLettreAvant] = char1[numLettreAvant];
 						numLettreAvant++;
 					}
 					// Si on a des lettres du premier mot après la lettre commune
-					int numLettreApres=nbCar+1;
-					while(numLettreApres<char1.length)
+					int numLettreApres = nbCar + 1;
+					while(numLettreApres < char1.length)
 					{
-						grille[nbCar2][numLettreApres]=char1[numLettreApres];
+						grille[nbCar2][numLettreApres] = char1[numLettreApres];
 						numLettreApres++;
 					}
 					// Si on a une lettre du second mot avant la lettre commune
-					int numLettreAvantM2=0;
-					while(numLettreAvantM2<nbCar2)
+					int numLettreAvantM2 = 0;
+					while(numLettreAvantM2 < nbCar2)
 					{
-						grille[numLettreAvantM2][nbCar]=char2[numLettreAvantM2];
+						grille[numLettreAvantM2][nbCar] = char2[numLettreAvantM2];
 						numLettreAvantM2++;
 					}
 					
 					// Si on a une lettre du second mot après la lettre commune
-					int numLettreApresM2=nbCar2+1;
-					while(numLettreApresM2<char2.length)
+					int numLettreApresM2 = nbCar2 + 1;
+					while(numLettreApresM2 < char2.length)
 					{
-						grille[numLettreApresM2][nbCar]=char2[numLettreApresM2];
+						grille[numLettreApresM2][nbCar] = char2[numLettreApresM2];
 						numLettreApresM2++;
 					}
 				}
@@ -221,96 +310,113 @@ public class CrossWord{
 		}
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////
-		/*int posVert=0;
-		int posHor=0;
-		int posWord=0;
+		int posVert= 0;
+		int posHor = 0;
+		int posWord = 0;
 		int[] posLastChar;
-		//posLastChar=searchWordGrille(grille,char1,posVert,posHor,posWord,taille);
-		if(posLastChar[0]==20)
+		posLastChar = searchWordGrille(grille, char1, posVert, posHor, posWord, taille);
+		if(posLastChar[0] == 20)
 		{
-			System.out.println("x : "+posLastChar[0]+"y: "+posLastChar[1]);
+			System.out.println("x : " + posLastChar[0] + " y : " + posLastChar[1]);
 		}
 		else
 		{
-			System.out.println("x : "+posLastChar[0]+"y: "+posLastChar[1]+grille[posLastChar[0]][posLastChar[1]]);
-		}*/
+			System.out.println("x : " + posLastChar[0] + " y : " + posLastChar[1] + grille[posLastChar[0]][posLastChar[1]]);
+		}
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////
+		wordsOnGrid.add(firstWord);
+		wordsOnGridAndOrientation.add(firstWord, "horizontal");
+		wordsOnGrid.add(secondWord);
+		wordsOnGridAndOrientation(secondWord, "vertical");
 		return grille;
 	}
 	
-	public boolean isEmpty(char grille[][],int taille)
+	public boolean isEmpty(char grille[][], int taille)
 	{
-		boolean empty=true;
-		for(int i = 0; i<taille;i++)
+		boolean empty = true;
+		for(int i = 0; i < taille; i++)
 		{
-			for(int j = 0; i<taille;i++)
+			for(int j = 0; i < taille; i++)
 			{
-				if(grille[i][j]!='*')
+				if(grille[i][j] != '*')
 				{
 					empty = false;
 				}
 			}
 		}
-		
 		return empty;
 	}
 	
-	// la fonction nous renverra la position du dernier caractère du mot ainsi que son orientation 
-	/*public int[] searchWordGrille(char grille[][],char[] word, int posVert, int posHor, int posWord, int taille)
+	// La fonction nous renverra la position du dernier caractère du mot ainsi que son orientation 
+	public int[] searchWordGrille(char grille[][], char[] word, int posVert, int posHor, int posWord, int taille)
 	{
 		int[] tab = new int[3];
 		// on utilise la valeur 20 car les mots peuvent être au maximum de 15 caractère et donc impossible qu'ils soient jusqu'à 20			
-		tab[0]=20;
-		tab[1]=20;
-		tab[2]=20;
-		boolean continuer=true;
-		System.out.println("posVert : "+posVert);
-		System.out.println("posHor : "+posHor);
-		System.out.println("taille : "+taille);
-		while (posVert<taille-1|| continuer==true)
+		tab[0] = 20;
+		tab[1] = 20;
+		tab[2] = 20;
+		boolean continuer = true;
+		System.out.println("posVert : " + posVert);
+		System.out.println("posHor : " + posHor);
+		System.out.println("taille : " + taille);
+		System.out.print("word : ");
+		for(int i = 0; i < word.length; i++){
+			System.out.print(word[i]);
+		}
+		System.out.println();
+		System.out.println("posWord :" + posWord);
+
+		while (posVert < taille - 1 && continuer == true)
 		{	
-			System.out.println("posVert : "+posVert);
-			int posHor2=posHor;
-			while (posHor2<taille-1 || continuer==true)
+			System.out.println("posVert < taille - 1 && continuer == true");
+			System.out.println("posVert : " + posVert);
+			int posHor2 = posHor;
+			while (posHor2 < taille - 1 && continuer == true)
 			{
-				System.out.println("posHor : "+posHor2);
+				System.out.println("posHor2 < taille - 1 && continuer == true");
+				System.out.println("posHor : " + posHor2);
 				
-				if (grille[posVert][posHor2]==word[posWord])
+				if (grille[posVert][posHor2] == word[posWord])
 				{
-					System.out.println("x : "+posVert+"y : "+posHor2+"lettre : "+grille[posVert][posHor2]);
-					if(grille[posVert+1][posHor2]==word[posWord+1])
+					System.out.println("grille[posVert][posHor2] == word[posWord]");
+					System.out.println("x : " + posVert + " y : " + posHor2 + " lettre : " + grille[posVert][posHor2]);
+					if(grille[posVert + 1][posHor2] == word[posWord + 1])
 					{
-						if(posWord+1==word.length)
-						{
+						if(posWord + 1 == word.length)
+						{ 
+							System.out.println("posWord + 1 == word.length");
 							// tab[2] sert a dire si le mot est vertical ou horizontal
-							tab[0]=posVert+1;
-							tab[1]=posHor2;
-							tab[2]=0;
-							System.out.println("x : "+tab[0]+"y: "+tab[1]+grille[tab[0]][tab[1]]);
-							continuer=false;
+							tab[0] = posVert + 1;
+							tab[1] = posHor2;
+							tab[2] = 0;
+							System.out.println("x : " + tab[0] + " y : " + tab[1] + grille[tab[0]][tab[1]]);
+							continuer = false;
 							return tab;
 						}
 						else
-						{
-							return searchWordGrille(grille,word,posVert+1,posHor2,posWord+1,taille);
+						{	System.out.println("else [posWord + 1 == word.length]");
+							return searchWordGrille(grille, word, posVert + 1, posHor2, posWord + 1, taille);
 						}
 					}
-					else if(grille[posVert][posHor2+1]==word[posWord+1])
+					else if(grille[posVert][posHor2 + 1] == word[posWord + 1])
 					{
-						if(posWord+1==word.length)
+						System.out.println("grille[posVert][posHor2 + 1] == word[posWord + 1]");
+						if(posWord + 1 == word.length)
 						{
+							System.out.println("posWord + 1 == word.length");
 							// tab[2] sert a dire si le mot est vertical ou horizontal
-							tab[0]=posVert;
-							tab[1]=posHor2+1;
-							tab[2]=1;
-							System.out.println("x : "+tab[0]+"y: "+tab[1]+grille[tab[0]][tab[1]]);
-							continuer=false;
+							tab[0] = posVert;
+							tab[1] = posHor2 + 1;
+							tab[2] = 1;
+							System.out.println("x : " + tab[0] + " y : " + tab[1] + grille[tab[0]][tab[1]]);
+							continuer = false;
 							return tab;
 						}
 						else
 						{
-							return searchWordGrille(grille,word,posVert,posHor2+1,posWord+1,taille);
+							System.out.println("else [posWord + 1 == word.length]");
+							return searchWordGrille(grille, word, posVert, posHor2 + 1, posWord + 1, taille);
 						}
 					}
 					else
@@ -323,5 +429,5 @@ public class CrossWord{
 			posVert++;
 		}
 		return tab;
-	}*/
+	}
 }
