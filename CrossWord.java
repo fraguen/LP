@@ -54,6 +54,15 @@ public class CrossWord{
 
 		grilleModif = addWord(firstWord,secondWord,grille);
 
+		for (int hauteur=0;hauteur<taille;hauteur++)
+		{
+			for (int largeur=0;largeur<taille;largeur++)
+			{
+				System.out.print(" | ");
+				System.out.print(grilleModif[hauteur][largeur]);
+			}
+			System.out.println(" |");
+		}
 		
 
 		for(int indexMotPick = 2; indexMotPick < listMotsPick.size(); indexMotPick++){
@@ -223,7 +232,9 @@ public class CrossWord{
 							}
 							else collision  = true;
 						}
-						else if(posX + 1 == taille){
+						else if(posX + 1 >= taille){
+							collision = true;
+							/*
 							if(grille[posX - 1][posY + 1] == '*'){
 								if(posY + 2 < taille){	
 									if(grille[posX][posY + 2] == '*'){
@@ -236,6 +247,7 @@ public class CrossWord{
 								}			
 							}
 							else collision  = true;
+							*/
 						}
 						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX - 1][posY + 1] == '*')){
 							if(posY + 2 < taille){	
@@ -256,34 +268,46 @@ public class CrossWord{
 					collision = true;
 			}
 			else if(sens.equals("decrement")){ //Test vers la gauche (y--)
-				if(posY - 1 >= 0){
-					if( grille[posX][posY - 1] == '*' && (posY - 1) >= 0 ){
+				if(posY - 1 > 0){
+					if( grille[posX][posY - 1] == '*' && (posY - 1) > 0 ){
 						if(posX - 1 == -1){
 							if(grille[posX + 1][posY - 1] == '*'){
-								if(posY - 2 < taille){	
+								if(posY - 2 >= 0){	
 									if(grille[posX][posY - 2] == '*'){
 
 									}
 									else collision = true;
 								}
-								else if(posY + 2 > taille){
+								else if(posY - 2 < 0){
 									collision = true;
 								}
 							}
 							else collision  = true;
 						}
-						else if(posX + 1 == taille){
+						else if(posX - 1 > -1){
 							if(grille[posX - 1][posY - 1] == '*'){
-								if(grille[posX][posY - 2] == '*' && (posY - 2) <= taille  ){
+								if(posY - 2 >= 0){	
+									if(grille[posX][posY - 2] == '*'){
 
+									}
+									else collision = true;
+								}
+								else if(posY - 2 < 0){
+									collision = true;
 								}
 								else collision = true;
 							}
 							else collision  = true;
 						}
 						else if( (grille[posX + 1][posY - 1] == '*')  && (grille[posX - 1][posY - 1] == '*')){
-							if(grille[posX][posY - 2] == '*' && (posY - 2) <= taille  ){
+							if(posY - 2 >= 0){	
+								if(grille[posX][posY - 2] == '*'){
 
+								}
+								else collision = true;
+							}
+							else if(posY - 2 < 0){
+								collision = true;
 							}
 							else collision = true;
 						}
@@ -300,27 +324,45 @@ public class CrossWord{
 					if( grille[posX + 1][posY] == '*' && (posX + 1) < taille ){
 						if(posY - 1 == -1){
 							if(grille[posX + 1][posY + 1] == '*'){
-								if(grille[posX + 2][posY] == '*' && (posX + 2) <= taille  ){
+								if(posX + 2 < taille){	
+									if(grille[posX + 2][posY ] == '*'){
 
+									}
+									else collision = true;
 								}
-								else collision = true;
+								else if(posX + 2 > taille){
+									collision = true;
+								}
 							}
 							else collision  = true;
 						}
 						else if(posY + 1 == taille){
-							if(grille[posX + 1][posY - 1] == '*'){
-								if(grille[posX + 2 ][posY] == '*' && (posX + 2) <= taille  ){
+							collision = true;
+							/*
+							if(grille[posX - 1][posY + 1] == '*'){
+								if(posY + 2 < taille){	
+									if(grille[posX][posY + 2] == '*'){
+
+									}
+									else collision = true;
+								}
+								else if(posY + 2 > taille){
+									collision = true;
+								}			
+							}
+							else collision  = true;
+							*/
+						}
+						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX - 1][posY + 1] == '*')){
+							if(posX + 2 < taille){	
+								if(grille[posX + 2][posY] == '*'){
 
 								}
 								else collision = true;
 							}
-							else collision  = true;
-						}
-						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX + 1][posY - 1] == '*')){
-							if(grille[posX + 2][posY] == '*' && (posX + 2) <= taille  ){
-
+							else if(posX + 2 > taille){
+								collision = true;
 							}
-							else collision = true;
 						}
 						else collision  = true;
 					}
@@ -330,31 +372,46 @@ public class CrossWord{
 					collision = true;
 			}
 			else if(sens.equals("decrement")){ //Test vers le haut (x--)
-				if(posX - 1 >= 0){
-					if( grille[posX - 1][posY] == '*' && (posX - 1) >= 0 ){
+				if(posX - 1 > 0){
+					if( grille[posX - 1][posY] == '*' && (posX - 1) > 0 ){
 						if(posY - 1 == -1){
-							if(grille[posX - 1][posY - 1] == '*'){
-								if(grille[posX - 2][posY] == '*' && (posX - 2) <= taille  ){
+							if(grille[posX - 1][posY + 1] == '*'){
+								if(posX - 2 >= 0){	
+									if(grille[posX - 2][posY] == '*'){
 
+									}
+									else collision = true;
 								}
-								else collision = true;
+								else if(posY - 2 < 0){
+									collision = true;
+								}
 							}
 							else collision  = true;
 						}
-						else if(posY + 1 == taille){
+						else if(posY - 1 > -1){
 							if(grille[posX - 1][posY - 1] == '*'){
-								if(grille[posX - 2][posY] == '*' && (posX - 2) <= taille  ){
+								if(posX - 2 >= 0){	
+									if(grille[posX - 2][posY] == '*'){
 
+									}
+									else collision = true;
 								}
-								else collision = true;
-							}
-							else collision  = true;
-						}
-						else if( (grille[posX - 1][posY - 1] == '*')  && (grille[posX - 1][posY + 1] == '*')){
-							if(grille[posX - 2][posY] == '*' && (posX - 2) <= taille  ){
-
+								else if(posY - 2 < 0){
+									collision = true;
+								}
 							}
 							else collision = true;
+						}
+						else if( (grille[posX + 1][posY - 1] == '*')  && (grille[posX - 1][posY - 1] == '*')){
+							if(posX - 2 >= 0){	
+								if(grille[posX - 2][posY] == '*'){
+
+								}
+								else collision = true;
+							}
+							else if(posY - 2 < 0){
+								collision = true;
+							}
 						}
 						else collision  = true;
 					}
@@ -389,109 +446,182 @@ public class CrossWord{
 		int charCommPlaced = 0;
 
 		int[] posXYCourant = {0, 0};
+
+		int taille = getTailleGrille();
 		
-		boolean continuer1 = true; // sinon plusieurs premières lettres communes misent à diverses endroits
+		boolean collision = false; // sinon plusieurs premières lettres communes misent à diverses endroits
 
 		int posX = posXYWordPlaced[0], posY = posXYWordPlaced[1];
-
-		if(orientationWordPlaced.equals("vertical")){
-			if(grilleClone[posX][posY] == charCom[charCommPlaced]){
-				System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
-				if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
-					int tempPosX = posX;
-					int tempPosY = posY;
-					int tempCharAtWordWantToPlace = charAtWordWantToPlace;
-
-					while(tempCharAtWordWantToPlace > 0){
-						posXYCourant[0] = tempPosX;
-						posXYCourant[1] = tempPosY;
-						System.out.println("testCollision");
-						if(testCollision(posXYCourant, "horizontal", "decrement", grilleClone)) //int[] posXY, String orientation, String sens, char[][] grille
-							grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-						else 
-							grilleClone = grille;
-						System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-						tempPosY--;
-						tempCharAtWordWantToPlace--;
-					}
-					if(tempCharAtWordWantToPlace <= 0){
-						tempCharAtWordWantToPlace = charAtWordWantToPlace;
-						tempPosX = posX;
-						tempPosY = posY;
-					}
-					while(tempCharAtWordWantToPlace < wordWantToPlace.length()){
-						posXYCourant[0] = tempPosX;
-						posXYCourant[1] = tempPosY;
-						System.out.println("testCollision");
-						if(testCollision(posXYCourant, "horizontal", "increment", grilleClone)) //int[] posXY, String orientation, String sens, char[][] grille
-							grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-						else 
-							grilleClone = grille;
-
-						System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-						tempPosY++;
-						tempCharAtWordWantToPlace++;
-					}
-					if(tempCharAtWordWantToPlace >= wordWantToPlace.length()){
-						tempCharAtWordWantToPlace = charAtWordWantToPlace;
-						tempPosX = posX;
-						tempPosY = posY;
-					}
-				}
-				else
-					charAtWordWantToPlace++;
-			}
-			else
-				posX++;
+		for(int i = 0; i < charCom.length; i++){
+			System.out.println(charCom[i]);
 		}
-		else if(orientationWordPlaced.equals("horizontal")){
-			if(grilleClone[posX][posY] == charCom[charCommPlaced]){
-				System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
-				if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
-					int tempPosX = posX;
-					int tempPosY = posY;
-					int tempCharAtWordWantToPlace = charAtWordWantToPlace;
 
-					while(tempCharAtWordWantToPlace > 0){
-						posXYCourant[0] = tempPosX;
-						posXYCourant[1] = tempPosY;
-						System.out.println("testCollision");
-						if(testCollision(posXYCourant, "vertical", "decrement", grilleClone)) //int[] posXY, String orientation, String sens, char[][] grille
-							grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-						else 
-							grilleClone = grille;
-						System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-						posX--;
-						tempCharAtWordWantToPlace--;
+		while(charCommPlaced < charCom.length - 1){
+			System.out.println("charCom[" + charCommPlaced + "] = " + charCom[charCommPlaced]);
+			if(orientationWordPlaced.equals("vertical")){
+				if(grilleClone[posX][posY] == charCom[charCommPlaced]){
+					if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
+						System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+						int tempPosX = posX;
+						int tempPosY = posY;
+						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
+
+						while(tempCharAtWordWantToPlace > 0 && collision == false){
+							posXYCourant[0] = tempPosX;
+							posXYCourant[1] = tempPosY;
+							System.out.println("testCollision");
+							if(testCollision(posXYCourant, "horizontal", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+							else{
+								grilleClone = grille;
+								collision = true;
+								System.out.println(collision);
+							}
+							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							tempPosY--;
+							tempCharAtWordWantToPlace--;
+						}
+						if(tempCharAtWordWantToPlace <= 0){
+							tempCharAtWordWantToPlace = charAtWordWantToPlace;
+							tempPosX = posX;
+							tempPosY = posY;
+						}
+						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
+							posXYCourant[0] = tempPosX;
+							posXYCourant[1] = tempPosY;
+							System.out.println("testCollision");
+							if(testCollision(posXYCourant, "horizontal", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+							else{
+								grilleClone = grille;
+								collision = true;
+								System.out.println(collision);
+							}
+
+							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							tempPosY++;
+							tempCharAtWordWantToPlace++;
+						}
+						if(collision){
+							if(posX < taille - 1){
+								posX++;
+							}
+							else if(charCommPlaced < charCom.length){
+								charCommPlaced++;
+							}
+
+						}
+						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
+							if(posX < taille - 1){
+								posX++;
+							}
+
+						}
 					}
-					if(tempCharAtWordWantToPlace <= 0){
-						tempCharAtWordWantToPlace = charAtWordWantToPlace;
-						tempPosX = posX;
-						tempPosY = posY;
+					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
+						charAtWordWantToPlace++;
+						System.out.println("charAtWordWantToPlace++ : " + charAtWordWantToPlace);
 					}
-					while(tempCharAtWordWantToPlace < wordWantToPlace.length()){
-						posXYCourant[0] = tempPosX;
-						posXYCourant[1] = tempPosY;
-						System.out.println("testCollision");
-						if(testCollision(posXYCourant, "vertical", "increment", grilleClone)) //int[] posXY, String orientation, String sens, char[][] grille
-							grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-						else 
-							grilleClone = grille;
-						System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-						tempPosX++;
-						tempCharAtWordWantToPlace++;
-					}
-					if(tempCharAtWordWantToPlace >= wordWantToPlace.length()){
-						tempCharAtWordWantToPlace = charAtWordWantToPlace;
-						tempPosX = posX;
-						tempPosY = posY;
-					}
+					else
+						break;
 				}
-				else
-					charAtWordWantToPlace++;
+				else{
+					if(posX < taille - 1){
+						posX++; 
+						System.out.println("X++ : " + posX) ;
+					}
+					else if(charCommPlaced < charCom.length - 1){
+						charCommPlaced++;
+						charAtWordWantToPlace = 0;
+						System.out.println("++ : " + charCom[charCommPlaced]);
+						posX = 0;
+						collision = false;
+					}
+					else
+						grilleClone = grille;
+				}
 			}
-			else
-				posY++;
+			else if(orientationWordPlaced.equals("horizontal")){
+				System.out.println(posX + " ! " + posY);
+				if(grilleClone[posX][posY] == charCom[charCommPlaced]){
+					if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
+						System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+						int tempPosX = posX;
+						int tempPosY = posY;
+						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
+
+						while(tempCharAtWordWantToPlace > 0 && collision == false){
+							posXYCourant[0] = tempPosX;
+							posXYCourant[1] = tempPosY;
+							System.out.println("testCollision");
+							if(testCollision(posXYCourant, "vertical", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+							else{
+								grilleClone = grille;
+								collision = true;
+								System.out.println(collision);
+							}
+							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							posX--;
+							tempCharAtWordWantToPlace--;
+						}
+						if(tempCharAtWordWantToPlace <= 0){
+							tempCharAtWordWantToPlace = charAtWordWantToPlace;
+							tempPosX = posX;
+							tempPosY = posY;
+						}
+						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
+							posXYCourant[0] = tempPosX;
+							posXYCourant[1] = tempPosY;
+							System.out.println("testCollision");
+							if(testCollision(posXYCourant, "vertical", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+							else{
+								grilleClone = grille;
+								collision = true;
+								System.out.println(collision);
+							}
+							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							tempPosX++;
+							tempCharAtWordWantToPlace++;
+						}
+						if(collision){
+							if(posY < taille - 1){
+								posY++;
+							}
+							else if(charCommPlaced < charCom.length){
+								charCommPlaced++;
+							}
+						}
+						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
+							if(posX < taille - 1){
+								posX++;
+							}
+
+						}
+					}
+					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
+						charAtWordWantToPlace++;
+						System.out.println("charAtWordWantToPlace++ : " + charAtWordWantToPlace);
+					}
+					else
+						break;
+				}
+				else{
+					if(posY < taille - 1){
+						posY++; 
+						System.out.println("Y++ : " + posY);
+					}
+					else if(charCommPlaced < charCom.length - 1){
+						charCommPlaced++;
+						charAtWordWantToPlace = 0;
+						System.out.println("++ : " + charCom[charCommPlaced]);
+						posY = 0;
+					}
+					else
+						grilleClone = grille;
+				}
+			}
 		}
 		return grilleClone;
 	}
