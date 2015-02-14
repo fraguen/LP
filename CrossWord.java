@@ -24,6 +24,7 @@ public class CrossWord{
 		ArrayList<String> listMotsPick = this.getListPickMot(nbCaractMaxi, nbCasesVidesMax, listMotByTaille);
 		GestionFichier ges = new GestionFichier();
 		listMotsPick = ges.TriBulleDecroissant(listMotsPick);
+		int indexMotPlaces = 0;
 		
 		
 		//voir toute la liste des mots séléctionner aléatoirement
@@ -53,6 +54,7 @@ public class CrossWord{
 		//Placer les 2 premiers mots
 
 		grilleModif = addWord(firstWord,secondWord,grille);
+		grille = grilleModif;
 
 		for (int hauteur=0;hauteur<taille;hauteur++)
 		{
@@ -66,7 +68,9 @@ public class CrossWord{
 		
 
 		for(int indexMotPick = 2; indexMotPick < listMotsPick.size(); indexMotPick++){
-			for (int indexMotPlaces = 0; indexMotPlaces < wordsOnGrid.size(); indexMotPlaces++){
+			indexMotPlaces = 0;
+			System.out.println("Mot suivant a placé! : " + listMotsPick.get(indexMotPick));
+			while(indexMotPlaces < wordsOnGrid.size()){
 				char[] charCom;
 				charCom = this.getCharCom(wordsOnGrid.get(indexMotPlaces), listMotsPick.get(indexMotPick));
 				if(charCom != null){
@@ -74,7 +78,36 @@ public class CrossWord{
 					String wordWantToPlace = listMotsPick.get(indexMotPick);
 					System.out.println("wordsOnGrid.get(" + indexMotPlaces + ") = " + wordPlaced + "; listMotsPick.get(" + indexMotPick + ") = " + wordWantToPlace);
 					grilleModif = tryToAdd(wordWantToPlace, wordPlaced, grille);
-					grille = grilleModif;
+
+					System.out.println("CrossWord(82) : GrilleModif : ");
+					for (int hauteur=0;hauteur<taille;hauteur++)
+					{
+						for (int largeur=0;largeur<taille;largeur++)
+						{
+							System.out.print(" | ");
+							System.out.print(grilleModif[hauteur][largeur]);
+						}
+						System.out.println(" |");
+					}
+
+					System.out.println("CrossWord(93) Grille : ");
+					for (int hauteur=0;hauteur<taille;hauteur++)
+					{
+						for (int largeur=0;largeur<taille;largeur++)
+						{
+							System.out.print(" | ");
+							System.out.print(grille[hauteur][largeur]);
+						}
+						System.out.println(" |");
+					}
+					if(grilleModif == grille){
+						indexMotPlaces++;
+						System.out.println("Mot suivant sur la grille !");
+					}
+					else{
+						grille = grilleModif;
+						indexMotPlaces = wordsOnGrid.size(); 
+					}
 
 				}
 			}
@@ -198,8 +231,7 @@ public class CrossWord{
 		char[][] grilleClone = testAddWord(wordWantToPlace, wordTested, posXYWordPlaced, orientationWordWantToPlace, grille); 
 
 
-
-		return grille;
+		return grilleClone;
 
 
 	}
@@ -213,11 +245,11 @@ public class CrossWord{
 		boolean collision = false;
 		int taille = getTailleGrille();
 
-		System.out.println("[" + posX + ", " + posY + "]");
+		System.out.println("testCollision(225) : [" + posX + ", " + posY + "]");
 		if(orientation.equals("horizontal")){
 			if(sens.equals("increment")){ //Test vers la droit (y++) 
 				if(posY + 1 < taille){
-					if( grille[posX][posY + 1] == '*' && (posY + 1) < taille ){
+					if( grille[posX][posY + 1] == '*'){
 						if(posX - 1 == -1){
 							if(grille[posX + 1][posY + 1] == '*'){
 								if(posY + 2 < taille){	
@@ -232,7 +264,7 @@ public class CrossWord{
 							}
 							else collision  = true;
 						}
-						else if(posX + 1 >= taille){
+						else if(posX + 1 > taille){
 							collision = true;
 							/*
 							if(grille[posX - 1][posY + 1] == '*'){
@@ -249,6 +281,9 @@ public class CrossWord{
 							else collision  = true;
 							*/
 						}
+						else if(posX + 1 == taille){
+
+						}
 						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX - 1][posY + 1] == '*')){
 							if(posY + 2 < taille){	
 								if(grille[posX][posY + 2] == '*'){
@@ -264,13 +299,17 @@ public class CrossWord{
 					}
 					else collision = true;
 				}	
-				else 
+				else if(posY + 1 == taille){
+
+				}
+				else{
 					collision = true;
+				}
 			}
 			else if(sens.equals("decrement")){ //Test vers la gauche (y--)
-				if(posY - 1 > 0){
-					if( grille[posX][posY - 1] == '*' && (posY - 1) > 0 ){
-						if(posX - 1 == -1){
+				if(posY - 1 >= 0){
+					if( grille[posX][posY - 1] == '*'){
+						if(posX - 1 >= -1){
 							if(grille[posX + 1][posY - 1] == '*'){
 								if(posY - 2 >= 0){	
 									if(grille[posX][posY - 2] == '*'){
@@ -278,13 +317,14 @@ public class CrossWord{
 									}
 									else collision = true;
 								}
-								else if(posY - 2 < 0){
+								else if(posY - 2 < -1){
 									collision = true;
 								}
 							}
 							else collision  = true;
 						}
-						else if(posX - 1 > -1){
+						else if(posX + 1 >= taille){
+
 							if(grille[posX - 1][posY - 1] == '*'){
 								if(posY - 2 >= 0){	
 									if(grille[posX][posY - 2] == '*'){
@@ -292,7 +332,7 @@ public class CrossWord{
 									}
 									else collision = true;
 								}
-								else if(posY - 2 < 0){
+								else if(posY - 2 < -1){
 									collision = true;
 								}
 								else collision = true;
@@ -306,7 +346,7 @@ public class CrossWord{
 								}
 								else collision = true;
 							}
-							else if(posY - 2 < 0){
+							else if(posY - 2 < -1){
 								collision = true;
 							}
 							else collision = true;
@@ -314,6 +354,10 @@ public class CrossWord{
 						else collision  = true;
 					}
 					else collision = true;
+				}
+				else if(posY - 1 == -1){
+
+
 				}
 				else collision = true;
 			}
@@ -338,22 +382,23 @@ public class CrossWord{
 						}
 						else if(posY + 1 == taille){
 							collision = true;
-							/*
-							if(grille[posX - 1][posY + 1] == '*'){
-								if(posY + 2 < taille){	
-									if(grille[posX][posY + 2] == '*'){
+							if(grille[posX + 1][posY - 1] == '*'){
+								if(posX + 2 < taille){	
+									if(grille[posX + 2][posY + 1] == '*'){
 
 									}
 									else collision = true;
 								}
-								else if(posY + 2 > taille){
+								else if(posX + 2 > taille){
 									collision = true;
 								}			
 							}
 							else collision  = true;
-							*/
 						}
-						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX - 1][posY + 1] == '*')){
+						else if(posY + 1 == taille){
+
+						}
+						else if( (grille[posX + 1][posY + 1] == '*')  && (grille[posX + 1][posY - 1] == '*')){
 							if(posX + 2 < taille){	
 								if(grille[posX + 2][posY] == '*'){
 
@@ -368,12 +413,16 @@ public class CrossWord{
 					}
 					else collision = true;
 				}	
-				else 
+				else if(posX + 1 == taille){
+
+				}
+				else{ 
 					collision = true;
+				}
 			}
 			else if(sens.equals("decrement")){ //Test vers le haut (x--)
-				if(posX - 1 > 0){
-					if( grille[posX - 1][posY] == '*' && (posX - 1) > 0 ){
+				if(posX - 1 >= 0){
+					if( grille[posX - 1][posY] == '*'){
 						if(posY - 1 == -1){
 							if(grille[posX - 1][posY + 1] == '*'){
 								if(posX - 2 >= 0){	
@@ -382,13 +431,13 @@ public class CrossWord{
 									}
 									else collision = true;
 								}
-								else if(posY - 2 < 0){
+								else if(posY - 2 < -1){
 									collision = true;
 								}
 							}
 							else collision  = true;
 						}
-						else if(posY - 1 > -1){
+						else if(posY + 1 == taille){
 							if(grille[posX - 1][posY - 1] == '*'){
 								if(posX - 2 >= 0){	
 									if(grille[posX - 2][posY] == '*'){
@@ -396,26 +445,29 @@ public class CrossWord{
 									}
 									else collision = true;
 								}
-								else if(posY - 2 < 0){
+								else if(posY - 2 < -1){
 									collision = true;
 								}
 							}
 							else collision = true;
 						}
-						else if( (grille[posX + 1][posY - 1] == '*')  && (grille[posX - 1][posY - 1] == '*')){
+						else if( (grille[posX - 1][posY + 1] == '*')  && (grille[posX - 1][posY - 1] == '*')){
 							if(posX - 2 >= 0){	
 								if(grille[posX - 2][posY] == '*'){
 
 								}
 								else collision = true;
 							}
-							else if(posY - 2 < 0){
+							else if(posY - 2 < -1){
 								collision = true;
 							}
 						}
 						else collision  = true;
 					}
 					else collision = true;
+				}
+				else if(posX - 1 ==  -1){
+
 				}
 				else collision = true;
 			}
@@ -431,11 +483,13 @@ public class CrossWord{
 	public char[][] testAddWord(String wordWantToPlace, String wordsOnGrid, int[] posXYWordPlaced, String orientationWordWantToPlace, char[][] grille){
 
 		
+		int taille = getTailleGrille();
 		char[] charCom;
 		charCom = this.getCharCom(wordsOnGrid, wordWantToPlace);
 		char[] charCom2;
 		charCom2 = this.getCharCom(wordWantToPlace, wordsOnGrid);
-		char[][] grilleClone = grille;
+		char [][] grilleClone = new char[taille][taille];
+		grilleClone = grille;
 		String orientationWordPlaced = wordsOnGridAndOrientation.get(wordsOnGrid);
 
 		char[] wordWantToPlaceArray =  wordWantToPlace.toCharArray();
@@ -446,180 +500,366 @@ public class CrossWord{
 		int charCommPlaced = 0;
 
 		int[] posXYCourant = {0, 0};
-
-		int taille = getTailleGrille();
 		
 		boolean collision = false; // sinon plusieurs premières lettres communes misent à diverses endroits
+		boolean wordPlaced = false;
+
+		final int finalPosX = posXYWordPlaced[0], finalPosY = posXYWordPlaced[1];
 
 		int posX = posXYWordPlaced[0], posY = posXYWordPlaced[1];
+
+		if(posX < 0)
+			posX = 0;
+		else if(posY < 0)
+			posY = 0;
+
 		for(int i = 0; i < charCom.length; i++){
 			System.out.println(charCom[i]);
 		}
 
-		while(charCommPlaced < charCom.length - 1){
-			System.out.println("charCom[" + charCommPlaced + "] = " + charCom[charCommPlaced]);
+		/*
+			Evite les '*' dans les caractères commnuns	
+		*/
+
+		while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
+			charCommPlaced++;
+		}
+
+		// Debug affiche le caractère commun courrant
+		System.out.println("testAdd(508) : charCom[" + charCommPlaced + "] = " + charCom[charCommPlaced]);
+
+
+		while(wordPlaced == false && charCommPlaced < charCom.length - 1){
+
+			// Si le mot testé sur la grille est vertical et que le mot n'as pas été placé
 			if(orientationWordPlaced.equals("vertical")){
+
+				// Debug		
+				System.out.println("testAdd(517) : " + posX + " ! " + posY + " charCommPlaced : " + charCommPlaced);
+
+				posX = finalPosX + charCommPlaced;
+				//Recherche de la position du caractère commun dans le mot placé
+				while(grilleClone[posX][posY] != charCom[charCommPlaced] && posX < taille - 1){
+					posX++;
+				}
+
+				// Si l'on rouve la caractère commun dans le mot (recherche de position)
 				if(grilleClone[posX][posY] == charCom[charCommPlaced]){
+
+					// Recherche du caractère commun dans le mot à placer
+					if(charAtWordWantToPlace < wordWantToPlace.length()){
+						while(wordWantToPlaceArray[charAtWordWantToPlace] != charCom[charCommPlaced] && charAtWordWantToPlace < wordWantToPlace.length() - 1){
+							charAtWordWantToPlace++;
+						}
+					}
+
 					if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
-						System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+
+						//Debug 
+						System.out.println("testAdd(541) : [" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+
+						// Mémorisation des position X et Y 
 						int tempPosX = posX;
 						int tempPosY = posY;
+
+						// Memorisation de l'endroit du caractère commun dans le mot à placer
 						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
 
-						while(tempCharAtWordWantToPlace > 0 && collision == false){
+						// Permet l'ajout d'un caractère du mot à placer tant que l'on est pas au début et qu'il n'y a pas eût de collision
+						while(tempCharAtWordWantToPlace >= 0 && collision == false){
+
+							//Détection de la sortie de la grille
+							if(tempPosY < 0){
+								tempPosY = 0;
+								collision = true;
+							}
+
+							// Création d'un tableau de position pour le test de collision
 							posXYCourant[0] = tempPosX;
 							posXYCourant[1] = tempPosY;
-							System.out.println("testCollision");
+
+							//Debug 
+							System.out.println(" testAdd(558) : testCollision");
+
+							// Test de collision
 							if(testCollision(posXYCourant, "horizontal", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
 								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{
-								grilleClone = grille;
+							else{ //S'il y a collision remetre la grille d'origine
 								collision = true;
-								System.out.println(collision);
+								System.out.println("testAdd(566) : " + collision);
 							}
-							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							System.out.println("testAdd(568) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+							//Décrémenter la position en Y car le mot a placer est à l'horizontal
 							tempPosY--;
+
+							//Décrémenter la position du caractère dans le mot à placer
 							tempCharAtWordWantToPlace--;
 						}
-						if(tempCharAtWordWantToPlace <= 0){
+
+						// S'il n'y a plus de caractère dans le mot à placer
+						if(tempCharAtWordWantToPlace < 0){
+
+							// Réinitialiser toutes les variables
 							tempCharAtWordWantToPlace = charAtWordWantToPlace;
 							tempPosX = posX;
 							tempPosY = posY;
 						}
+
+						// Permet l'ajout des caractères après le caractère commun s'il n'y a pas eût de collision
 						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
+
+							//Detection de la sortie de la grille
+							if(tempPosY > taille - 1){
+								collision = true;
+								tempPosY = taille - 1;
+							}
+
+							//Création du tableau de position pour le test de collision
 							posXYCourant[0] = tempPosX;
 							posXYCourant[1] = tempPosY;
-							System.out.println("testCollision");
+
+							//Debug
+							System.out.println("testAdd(594) : testCollision");
 							if(testCollision(posXYCourant, "horizontal", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
 								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{
-								grilleClone = grille;
+							else{ // S'il y a collison remettre la grille d'origine
 								collision = true;
-								System.out.println(collision);
+								System.out.println("testAdd(600) : " + collision);
 							}
 
-							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+							// Debug
+							System.out.println("testAdd(604) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+							// Increment de la position en Y car mot à placer horizontal
 							tempPosY++;
+							//Increment la position du caractère dans le mot à placer
 							tempCharAtWordWantToPlace++;
 						}
-						if(collision){
-							if(posX < taille - 1){
-								posX++;
-							}
-							else if(charCommPlaced < charCom.length){
+						// S'il y a eût collision
+						if(collision == true){
+							System.out.println("testAdd(622) :  collision ! ");
+							collision = false;
+							// Le mot n'as pas été placé
+							wordPlaced = false;
+							charCommPlaced++;
+							// Incrément du caractére commun et raz de la position en Y et des collisions
+							while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
 								charCommPlaced++;
+								collision = false;
 							}
-
+							posY = finalPosY;
 						}
+						// S'il n'y a pas eût de collison et que tous les caractères ont été placés
 						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
-							if(posX < taille - 1){
-								posX++;
-							}
-
+							wordPlaced = true;
+							return grilleClone;
 						}
-					}
+					} //Devenu inutile
 					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
 						charAtWordWantToPlace++;
-						System.out.println("charAtWordWantToPlace++ : " + charAtWordWantToPlace);
+						System.out.println("testAdd(631) : charAtWordWantToPlace++ : " + charAtWordWantToPlace);
 					}
-					else
-						break;
-				}
+					else{
+						wordPlaced = false;
+						while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
+								charCommPlaced++;
+								collision = false;
+						}
+						posY = finalPosY;
+						charAtWordWantToPlace = 0;
+					}
+				} //S'il ne trouve pas le caractère commun dans le mot placé à la position X on incrémente posX (innutile)
 				else{
+					return grille;
+				/*
 					if(posX < taille - 1){
 						posX++; 
 						System.out.println("X++ : " + posX) ;
 					}
-					else if(charCommPlaced < charCom.length - 1){
-						charCommPlaced++;
-						charAtWordWantToPlace = 0;
-						System.out.println("++ : " + charCom[charCommPlaced]);
-						posX = 0;
-						collision = false;
+					else{
+						System.out.println("-----------");
+						if(charCommPlaced < charCom.length){
+							System.out.println("++ : " + charCom[charCommPlaced]);
+							charCommPlaced++;
+							charAtWordWantToPlace = 0;
+							posX = 0;
+							collision = false;
+						}
+						else
+							grilleClone = grille;
 					}
-					else
-						grilleClone = grille;
+					*/
 				}
 			}
+			// Sinon si le mot placé est à la l'horizontal
 			else if(orientationWordPlaced.equals("horizontal")){
-				System.out.println(posX + " ! " + posY);
+
+				//Debug
+				System.out.println("testAdd(669) : " + posX + " ! " + posY + " charCommPlaced : " + charCommPlaced);
+
+				posY = finalPosY +  charCommPlaced;
+				//Recherche de la position du caractère commun dans le mot placé
+				while(grilleClone[posX][posY] != charCom[charCommPlaced] && posY < taille - 1){
+					posY++;
+				}
+
+				// Si l'on trouve la position du caractère commun dans le mot placé 
 				if(grilleClone[posX][posY] == charCom[charCommPlaced]){
+
+
+					// Recherche du caractère commun dans le mot à placer
+					if(charAtWordWantToPlace < wordWantToPlace.length() - 1){
+						while(wordWantToPlaceArray[charAtWordWantToPlace] != charCom[charCommPlaced] && charAtWordWantToPlace < wordWantToPlace.length() -1){
+							charAtWordWantToPlace++;
+						}
+					}
+
 					if(wordWantToPlaceArray[charAtWordWantToPlace] == charCom[charCommPlaced]){
-						System.out.println("[" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+
+						//Debug
+						System.out.println("testAdd(694)  : [" + posX + ", " + posY + "]; charCom[charCommPlaced] = " + charCom[charCommPlaced]);
+
+						//Memorisation des positions XY
 						int tempPosX = posX;
 						int tempPosY = posY;
-						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
 
-						while(tempCharAtWordWantToPlace > 0 && collision == false){
+						//Mémorisation de la place du caracère commun dans le mot à placé
+						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
+						
+						// Permet l'ajout d'un caractère du mot à placer tant que l'on est pas au début et qu'il n'y a pas eût de collision
+						while(tempCharAtWordWantToPlace >= 0 && collision == false){
+
+							//Detection de la sortie de la grille
+							if(tempPosX < 0){
+								collision = true;
+								tempPosX = 0;
+								return grille;
+							}
+
+							// Création d'un tableau de position pour le test de collision
 							posXYCourant[0] = tempPosX;
 							posXYCourant[1] = tempPosY;
-							System.out.println("testCollision");
+
+							//Debug
+							System.out.println("testAdd(711) : testCollision");
+
+							// Test de collision
 							if(testCollision(posXYCourant, "vertical", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
 								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{
-								grilleClone = grille;
+							else{ //S'il y a eût collison raz de la grille
 								collision = true;
-								System.out.println(collision);
+								System.out.println("testAdd(719) : " + collision);
 							}
-							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-							posX--;
+
+							//Debug 
+							System.out.println("testAdd(723) : " +  wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+							//Décrément de la position car mot placé à la vertical donc mot à placé à l'horizontal
+							tempPosX--;
+
+							//Décrement de la position du caractère dans le mot à placé
 							tempCharAtWordWantToPlace--;
 						}
-						if(tempCharAtWordWantToPlace <= 0){
+
+						// Si l'on n'y a plus de caractère avant le caractère commun du mot à placé
+						if(tempCharAtWordWantToPlace < 0){
+
+							//RAZ variable de position
 							tempCharAtWordWantToPlace = charAtWordWantToPlace;
+							System.out.println("testAdd(737) : " + posX + ";" + posY);
 							tempPosX = posX;
 							tempPosY = posY;
 						}
+
+						// Permet l'ajout des caractères après le caractère commun s'il n'y a pas eût de collision
 						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
-							posXYCourant[0] = tempPosX;
-							posXYCourant[1] = tempPosY;
-							System.out.println("testCollision");
-							if(testCollision(posXYCourant, "vertical", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
-								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{
-								grilleClone = grille;
+
+							if(tempPosX > taille - 1){
 								collision = true;
-								System.out.println(collision);
-							}
-							System.out.println(wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-							tempPosX++;
-							tempCharAtWordWantToPlace++;
-						}
-						if(collision){
-							if(posY < taille - 1){
-								posY++;
-							}
-							else if(charCommPlaced < charCom.length){
-								charCommPlaced++;
-							}
-						}
-						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
-							if(posX < taille - 1){
-								posX++;
+								tempPosX = taille - 1;
+								return grille;
 							}
 
+							// Création d'un tableau de position pour le test de collision
+							posXYCourant[0] = tempPosX;
+							posXYCourant[1] = tempPosY;
+
+							//Debug
+							System.out.println("testAdd(750) : testCollision");
+
+							//Test de collison
+							if(testCollision(posXYCourant, "vertical", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+							else{ //S'il y a eût collison RAZ grille
+								collision = true;
+								System.out.println("testAdd(758) : " + collision);
+							}
+
+							//Debug
+							System.out.println("testAdd(762) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+							// Incrément de la position en X
+							tempPosX++;
+
+							//Incrément de la position du caractère du mot à placé
+							tempCharAtWordWantToPlace++;
 						}
-					}
+						// S'il y a eût collision
+						if(collision == true){
+							collision = false;
+							System.out.println("testAdd(789) :  collision ! ");
+							// Le mot n'as pas été placé
+							wordPlaced = false;
+							charCommPlaced++;
+							grilleClone = grille;
+
+							// Incrément du caractére commun et raz de la position en X et des collision
+							while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
+								charCommPlaced++;
+							}
+							posX = finalPosX;
+							tempCharAtWordWantToPlace = charAtWordWantToPlace;
+						}
+						// S'il n'y a pas eût de collison et que tous les caractères ont été placés
+						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
+							wordPlaced = true;
+							return grilleClone;
+						}
+					} //Inutile
 					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
 						charAtWordWantToPlace++;
-						System.out.println("charAtWordWantToPlace++ : " + charAtWordWantToPlace);
+						System.out.println("testAdd(792) : charAtWordWantToPlace++ : " + charAtWordWantToPlace);
 					}
-					else
-						break;
+					else{
+						wordPlaced = false;
+						while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
+								charCommPlaced++;
+								collision = false;
+							}
+							posX = finalPosX;
+							charAtWordWantToPlace = 0;
+					}
+
 				}
 				else{
+					return grille;
+				/*
 					if(posY < taille - 1){
 						posY++; 
 						System.out.println("Y++ : " + posY);
 					}
-					else if(charCommPlaced < charCom.length - 1){
-						charCommPlaced++;
-						charAtWordWantToPlace = 0;
-						System.out.println("++ : " + charCom[charCommPlaced]);
-						posY = 0;
-					}
-					else
-						grilleClone = grille;
+					else {
+						System.out.println("-----------");
+						if(charCommPlaced < charCom.length){
+							System.out.println("++ : " + charCom[charCommPlaced]);
+							charCommPlaced++;
+							charAtWordWantToPlace = 0;
+							posY = 0;
+							}
+						else
+							grilleClone = grille;
+					}*/
 				}
 			}
 		}
@@ -644,11 +884,7 @@ public class CrossWord{
 		while(posX < taille){
 
 			while(posY < taille && posX < taille){
-				//System.out.println("Coord : [" + posX + "," + posY + "]");
 
-				//System.out.println(indexArray);
-
-				//System.out.println(grille[posX][posY] + "; " +  wordPlacedArray[indexArray]);
 				if(grille[posX][posY] == wordPlacedArray[indexArray] && indexArray < wordPlaced.length()){
 					indexArray++;
 					wordFind = true;
@@ -685,7 +921,7 @@ public class CrossWord{
 			//else System.out.println("Supp");
 
 		}
-		//System.out.println("[" + posXY[0] + "," + posXY[1] + "]");
+		System.out.println("Final [" + posXY[0] + "," + posXY[1] + "]");
 		return posXY;
 	}
 
