@@ -17,11 +17,13 @@ public class Main {
 		GestionFichier ges = new GestionFichier(); // Instantie un nouveau GestionFichier
 		int nbMotsDictionnaire = ges.getNbMotsDictionnaire();	// On récupère le nombre de mots dans le dictionnaire
 		int nbMotsImportes = ges.getNbMotsImportes(); // On récupère le nombre de mots exportés
+		// Le le fichier word.txt n'existe pas la fonction getNbMotsImportes() renvoie -1 
+		// Donc on crée le fichier et on le remplis juste avec un nombre de mot = 0
 		if(nbMotsImportes == -1){
 			ArrayList<String> initFichierMot = new ArrayList<String>();
 			initFichierMot.add("Nombre de mots : # 0");
 			ges.EcritureFichier("word.txt", initFichierMot);
-			nbMotsImportes = ges.getNbMotsImportes();
+			nbMotsImportes = ges.getNbMotsImportes(); // Relecture du nombre de mot
 		}
 		System.out.println("Nombres de mots dans le dictionnaire : " + nbMotsDictionnaire);	// On affiche le nombre de mots dans le dictionnaire
 		System.out.println("Nombres de mots dans le fichier des mots importés : " + nbMotsImportes);	// On affiche le nombre de mot dans le fichier de mots exportés
