@@ -197,7 +197,6 @@ public class CrossWord{
 	public String pickMot(ArrayList<String> listMots){
 
 		Random rand = new Random();
-
 		int maxRandom = listMots.size();
 		int random = rand.nextInt(maxRandom);
 

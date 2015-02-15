@@ -64,7 +64,7 @@ public class GestionFichier {
     	Matcher matcher; 
     	Pattern pattern = Pattern.compile("(.+#.+)"); // Patter recherchant un ou pls caractères suivis d'un # et d'un ou pls caractères
     												// Car écriture à la fin du fichier de mot exporté du nombre de mot
-    	int nbMots;
+    	int nbMots = 0;
 		try {
 			FileInputStream fis = new FileInputStream("word.txt"); // Ouverture du fichier de mot exportés (word.txt)
     		BufferedReader fichier = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
@@ -75,11 +75,13 @@ public class GestionFichier {
 					// Le nombre de mot se situe après le # donc split[1] mais il y a un espace avant pour cause de lisibilité
 					// donc on utilise trim() pour supprimer les espaces et on converti la chaine de caractère en Integer
 					nbMots = Integer.parseInt(split[1].trim());  // Récup le nombre de mots exportés
+					String nextLine = fichier.readLine();
 				}
 			}			
             fichier.close(); // Fermeture du fichier
 		}catch (FileNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("Fichier innexistant. Création d'un fichier sans mot.");
+			return -1;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}  

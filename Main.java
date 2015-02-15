@@ -17,11 +17,18 @@ public class Main {
 		GestionFichier ges = new GestionFichier(); // Instantie un nouveau GestionFichier
 		int nbMotsDictionnaire = ges.getNbMotsDictionnaire();	// On récupère le nombre de mots dans le dictionnaire
 		int nbMotsImportes = ges.getNbMotsImportes(); // On récupère le nombre de mots exportés
+		if(nbMotsImportes == -1){
+			ArrayList<String> initFichierMot = new ArrayList<String>();
+			initFichierMot.add("Nombre de mots : # 0");
+			ges.EcritureFichier("word.txt", initFichierMot);
+			nbMotsImportes = ges.getNbMotsImportes();
+		}
 		System.out.println("Nombres de mots dans le dictionnaire : " + nbMotsDictionnaire);	// On affiche le nombre de mots dans le dictionnaire
 		System.out.println("Nombres de mots dans le fichier des mots importés : " + nbMotsImportes);	// On affiche le nombre de mot dans le fichier de mots exportés
 
 		if(nbMotsImportes != nbMotsDictionnaire){	// Si le nombre de mot dans les 2 fichiers est diférents
 			ges.MaJDictionnaire(); // On met à jour le dictionnaire et les fichiers annexes
+			nbMotsImportes = ges.getNbMotsImportes();
 			ArrayList<String> listMots = ges.Tri(nbMotsImportes, "croissant");	// On fait un tri croissant des mots exportés
 			ges.EcritureFichier("TriCroissant.txt", listMots);	// On écrit les mots triés dans le fichier TriCroissant.txt
 			ArrayList<String> listMots2 = ges.Tri(nbMotsImportes, "decroissant");	// On fait un tri décroissant des mots exportés
@@ -34,10 +41,10 @@ public class Main {
 			taille = 15;	// On le force à 15
 		else if(taille < 5) // S'il est plus petit que 5
 			taille = 5;	// On le force à 5
-		System.out.println("Taille de la grille : " + taille +"x" + taille); // On affiche la taille de la grille
+		System.out.println("Taille de la grille : " + taille + "x" + taille); // On affiche la taille de la grille
 		
 		CrossWord cw = new CrossWord(taille);	// On cré un nouveau mot croisé de la taille définie précédement
-		
+
 		//listMotByTaille = ges.TriBulleDecroissant(listMotByTaille);
 		/*for(int i = 0; i < listMotByTaille.size(); i++){
 			System.out.println(listMotByTaille.get(i));
