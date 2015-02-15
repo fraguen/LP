@@ -54,7 +54,7 @@ public class CrossWord{
 		//Placer les 2 premiers mots
 
 		grilleModif = addWord(firstWord,secondWord,grille);
-		grille = grilleModif;
+		grille = copieGrille(grilleModif, taille);
 
 		for (int hauteur=0;hauteur<taille;hauteur++)
 		{
@@ -105,7 +105,7 @@ public class CrossWord{
 						System.out.println("Mot suivant sur la grille !");
 					}
 					else{
-						grille = grilleModif;
+						grille = copieGrille(grilleModif, taille);
 						indexMotPlaces = wordsOnGrid.size(); 
 					}
 
@@ -115,6 +115,8 @@ public class CrossWord{
 		}
 
 		// Affichage de la grille
+
+		System.out.println("CrossWord(119) : Grille finale : ");
 		for (int hauteur=0;hauteur<taille;hauteur++)
 		{
 			for (int largeur=0;largeur<taille;largeur++)
@@ -489,7 +491,8 @@ public class CrossWord{
 		char[] charCom2;
 		charCom2 = this.getCharCom(wordWantToPlace, wordsOnGrid);
 		char [][] grilleClone = new char[taille][taille];
-		grilleClone = grille;
+
+		grilleClone = copieGrille(grille, taille);
 		String orientationWordPlaced = wordsOnGridAndOrientation.get(wordsOnGrid);
 
 		char[] wordWantToPlaceArray =  wordWantToPlace.toCharArray();
@@ -566,35 +569,42 @@ public class CrossWord{
 						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
 
 						// Permet l'ajout d'un caractère du mot à placer tant que l'on est pas au début et qu'il n'y a pas eût de collision
-						while(tempCharAtWordWantToPlace >= 0 && collision == false){
+						while(tempCharAtWordWantToPlace >= 0){
+
 
 							//Détection de la sortie de la grille
 							if(tempPosY < 0){
 								tempPosY = 0;
 								collision = true;
+								tempCharAtWordWantToPlace = -1;
 							}
 
-							// Création d'un tableau de position pour le test de collision
-							posXYCourant[0] = tempPosX;
-							posXYCourant[1] = tempPosY;
+							if(collision == false){
 
-							//Debug 
-							System.out.println(" testAdd(558) : testCollision");
+								// Création d'un tableau de position pour le test de collision
+								posXYCourant[0] = tempPosX;
+								posXYCourant[1] = tempPosY;
 
-							// Test de collision
-							if(testCollision(posXYCourant, "horizontal", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
-								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{ //S'il y a collision remetre la grille d'origine
-								collision = true;
-								System.out.println("testAdd(566) : " + collision);
+								//Debug 
+								System.out.println(" testAdd(558) : testCollision");
+
+								// Test de collision
+								if(testCollision(posXYCourant, "horizontal", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+									grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+								else{ //S'il y a collision remetre la grille d'origine
+									collision = true;
+									System.out.println("testAdd(566) : " + collision);
+								}
+								System.out.println("testAdd(568) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+								//Décrémenter la position en Y car le mot a placer est à l'horizontal
+								tempPosY--;
+
+								//Décrémenter la position du caractère dans le mot à placer
+								tempCharAtWordWantToPlace--;
 							}
-							System.out.println("testAdd(568) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-
-							//Décrémenter la position en Y car le mot a placer est à l'horizontal
-							tempPosY--;
-
-							//Décrémenter la position du caractère dans le mot à placer
-							tempCharAtWordWantToPlace--;
+							else
+								tempPosY = -1;
 						}
 
 						// S'il n'y a plus de caractère dans le mot à placer
@@ -607,34 +617,41 @@ public class CrossWord{
 						}
 
 						// Permet l'ajout des caractères après le caractère commun s'il n'y a pas eût de collision
-						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
+						while(tempCharAtWordWantToPlace < wordWantToPlace.length()){
+
 
 							//Detection de la sortie de la grille
 							if(tempPosY > taille - 1){
 								collision = true;
 								tempPosY = taille - 1;
+								tempCharAtWordWantToPlace = wordWantToPlace.length();
 							}
 
-							//Création du tableau de position pour le test de collision
-							posXYCourant[0] = tempPosX;
-							posXYCourant[1] = tempPosY;
+							if(collision == false){
 
-							//Debug
-							System.out.println("testAdd(594) : testCollision");
-							if(testCollision(posXYCourant, "horizontal", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
-								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{ // S'il y a collison remettre la grille d'origine
-								collision = true;
-								System.out.println("testAdd(600) : " + collision);
+								//Création du tableau de position pour le test de collision
+								posXYCourant[0] = tempPosX;
+								posXYCourant[1] = tempPosY;
+
+								//Debug
+								System.out.println("testAdd(594) : testCollision");
+								if(testCollision(posXYCourant, "horizontal", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+									grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+								else{ // S'il y a collison remettre la grille d'origine
+									collision = true;
+									System.out.println("testAdd(600) : " + collision);
+								}
+
+								// Debug
+								System.out.println("testAdd(604) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+								// Increment de la position en Y car mot à placer horizontal
+								tempPosY++;
+								//Increment la position du caractère dans le mot à placer
+								tempCharAtWordWantToPlace++;
 							}
-
-							// Debug
-							System.out.println("testAdd(604) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-
-							// Increment de la position en Y car mot à placer horizontal
-							tempPosY++;
-							//Increment la position du caractère dans le mot à placer
-							tempCharAtWordWantToPlace++;
+							else
+								tempPosY = taille;
 						}
 						// S'il y a eût collision
 						if(collision == true){
@@ -643,6 +660,7 @@ public class CrossWord{
 							// Le mot n'as pas été placé
 							wordPlaced = false;
 							charCommPlaced++;
+							grilleClone = copieGrille(grille, taille);
 							// Incrément du caractére commun et raz de la position en Y et des collisions
 							while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
 								charCommPlaced++;
@@ -653,13 +671,12 @@ public class CrossWord{
 						// S'il n'y a pas eût de collison et que tous les caractères ont été placés
 						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
 							wordPlaced = true;
-							return grilleClone;
 						}
 					} //Devenu inutile
-					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
+					/*else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
 						charAtWordWantToPlace++;
 						System.out.println("testAdd(631) : charAtWordWantToPlace++ : " + charAtWordWantToPlace);
-					}
+					}*/
 					else{
 						wordPlaced = false;
 						while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
@@ -671,7 +688,7 @@ public class CrossWord{
 					}
 				} //S'il ne trouve pas le caractère commun dans le mot placé à la position X on incrémente posX (innutile)
 				else{
-					return grille;
+					grilleClone = copieGrille(grille, taille);
 				/*
 					if(posX < taille - 1){
 						posX++; 
@@ -728,38 +745,43 @@ public class CrossWord{
 						int tempCharAtWordWantToPlace = charAtWordWantToPlace;
 						
 						// Permet l'ajout d'un caractère du mot à placer tant que l'on est pas au début et qu'il n'y a pas eût de collision
-						while(tempCharAtWordWantToPlace >= 0 && collision == false){
+						while(tempCharAtWordWantToPlace >= 0){
+
 
 							//Detection de la sortie de la grille
 							if(tempPosX < 0){
 								collision = true;
-								tempPosX = 0;
-								return grille;
+								tempCharAtWordWantToPlace = -1;
 							}
 
-							// Création d'un tableau de position pour le test de collision
-							posXYCourant[0] = tempPosX;
-							posXYCourant[1] = tempPosY;
+							if(collision == false){
 
-							//Debug
-							System.out.println("testAdd(711) : testCollision");
+								// Création d'un tableau de position pour le test de collision
+								posXYCourant[0] = tempPosX;
+								posXYCourant[1] = tempPosY;
 
-							// Test de collision
-							if(testCollision(posXYCourant, "vertical", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
-								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{ //S'il y a eût collison raz de la grille
-								collision = true;
-								System.out.println("testAdd(719) : " + collision);
+								//Debug
+								System.out.println("testAdd(711) : testCollision");
+
+								// Test de collision
+								if(testCollision(posXYCourant, "vertical", "decrement", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+									grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+								else{ //S'il y a eût collison raz de la grille
+									collision = true;
+									System.out.println("testAdd(719) : " + collision);
+								}
+
+								//Debug 
+								System.out.println("testAdd(723) : " +  wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+								//Décrément de la position car mot placé à la vertical donc mot à placé à l'horizontal
+								tempPosX--;
+
+								//Décrement de la position du caractère dans le mot à placé
+								tempCharAtWordWantToPlace--;
 							}
-
-							//Debug 
-							System.out.println("testAdd(723) : " +  wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-
-							//Décrément de la position car mot placé à la vertical donc mot à placé à l'horizontal
-							tempPosX--;
-
-							//Décrement de la position du caractère dans le mot à placé
-							tempCharAtWordWantToPlace--;
+							else
+								tempPosX  = -1;
 						}
 
 						// Si l'on n'y a plus de caractère avant le caractère commun du mot à placé
@@ -773,37 +795,43 @@ public class CrossWord{
 						}
 
 						// Permet l'ajout des caractères après le caractère commun s'il n'y a pas eût de collision
-						while(tempCharAtWordWantToPlace < wordWantToPlace.length() && collision == false){
+						while(tempCharAtWordWantToPlace < wordWantToPlace.length()){
+
 
 							if(tempPosX > taille - 1){
 								collision = true;
 								tempPosX = taille - 1;
-								return grille;
+								tempCharAtWordWantToPlace = wordWantToPlace.length();
 							}
 
-							// Création d'un tableau de position pour le test de collision
-							posXYCourant[0] = tempPosX;
-							posXYCourant[1] = tempPosY;
+							if(collision == false){
 
-							//Debug
-							System.out.println("testAdd(750) : testCollision");
+								// Création d'un tableau de position pour le test de collision
+								posXYCourant[0] = tempPosX;
+								posXYCourant[1] = tempPosY;
 
-							//Test de collison
-							if(testCollision(posXYCourant, "vertical", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
-								grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
-							else{ //S'il y a eût collison RAZ grille
-								collision = true;
-								System.out.println("testAdd(758) : " + collision);
+								//Debug
+								System.out.println("testAdd(750) : testCollision");
+
+								//Test de collison
+								if(testCollision(posXYCourant, "vertical", "increment", grilleClone) == false) //int[] posXY, String orientation, String sens, char[][] grille
+									grilleClone[tempPosX][tempPosY] = wordWantToPlaceArray[tempCharAtWordWantToPlace];
+								else{ //S'il y a eût collison RAZ grille
+									collision = true;
+									System.out.println("testAdd(758) : " + collision);
+								}
+
+								//Debug
+								System.out.println("testAdd(762) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
+
+								// Incrément de la position en X
+								tempPosX++;
+
+								//Incrément de la position du caractère du mot à placé
+								tempCharAtWordWantToPlace++;
 							}
-
-							//Debug
-							System.out.println("testAdd(762) : " + wordWantToPlaceArray[tempCharAtWordWantToPlace]);
-
-							// Incrément de la position en X
-							tempPosX++;
-
-							//Incrément de la position du caractère du mot à placé
-							tempCharAtWordWantToPlace++;
+							else
+								tempPosX = taille;
 						}
 						// S'il y a eût collision
 						if(collision == true){
@@ -812,7 +840,7 @@ public class CrossWord{
 							// Le mot n'as pas été placé
 							wordPlaced = false;
 							charCommPlaced++;
-							grilleClone = grille;
+							grilleClone = copieGrille(grille, taille);
 
 							// Incrément du caractére commun et raz de la position en X et des collision
 							while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
@@ -824,26 +852,26 @@ public class CrossWord{
 						// S'il n'y a pas eût de collison et que tous les caractères ont été placés
 						else if(tempCharAtWordWantToPlace >= wordWantToPlaceArray.length){
 							wordPlaced = true;
-							return grilleClone;
 						}
 					} //Inutile
-					else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
+					/*else if(charAtWordWantToPlace < wordWantToPlaceArray.length - 1){
 						charAtWordWantToPlace++;
 						System.out.println("testAdd(792) : charAtWordWantToPlace++ : " + charAtWordWantToPlace);
-					}
+						
+					}*/
 					else{
 						wordPlaced = false;
 						while(charCom[charCommPlaced] == '*' && charCommPlaced < charCom.length - 1){
 								charCommPlaced++;
-								collision = false;
-							}
-							posX = finalPosX;
-							charAtWordWantToPlace = 0;
+						}
+						collision = false;
+						posX = finalPosX;
+						charAtWordWantToPlace = 0;
 					}
 
 				}
 				else{
-					return grille;
+					grilleClone = copieGrille(grille, taille);
 				/*
 					if(posY < taille - 1){
 						posY++; 
@@ -864,6 +892,23 @@ public class CrossWord{
 			}
 		}
 		return grilleClone;
+	}
+
+
+	/*
+		Fonction permettant de faire la copie de deux grille
+	*/
+
+	public char[][] copieGrille(char[][] grille, int taille){
+		char[][] grilleCopie = new char[taille][taille];
+
+		for(int x = 0; x < taille; x++){
+			for (int y = 0; y < taille; y++) {
+				grilleCopie[x][y] = grille[x][y];
+			}
+		}
+
+		return grilleCopie;
 	}
 
 	/*
