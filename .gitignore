@@ -11,6 +11,14 @@
 *.war
 *.ear
 
+# Fichiers de tri, synonymes et mots #
+
+TriCroissant.txt
+TriDecroissant.txt
+out.dat
+word.txt
+adj.txt
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
